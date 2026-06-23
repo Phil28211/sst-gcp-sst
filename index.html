@@ -2,95 +2,96 @@
 <html lang="fr-CA">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Accueil SST - GCP Construction</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@5.0.5/dist/signature_pad.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
-<header class="topbar">
-  <h1>Accueil SST</h1>
-  <p>GCP Construction</p>
-</header>
+  <main class="page">
+    <section class="hero card">
+      <img src="logo.png" alt="Logo GCP Construction" class="logo">
+      <h1>Accueil des travailleurs</h1>
+      <p>Veuillez remplir ce formulaire avant d'accéder au chantier. Le système générera un PDF d'accueil SST.</p>
+    </section>
 
-<main class="container">
-  <section class="card">
-    <h2>Accueil des travailleurs</h2>
-    <p>Veuillez remplir ce formulaire avant d'accéder au chantier. Le système générera un PDF d'accueil SST.</p>
-  </section>
+    <form id="sstForm">
+      <section class="card">
+        <h2>1. Identification</h2>
 
-  <form id="sstForm" class="card">
-    <h2>1. Identification</h2>
+        <label>Nom du chantier <span>*</span>
+          <input id="chantier" type="text" required>
+        </label>
 
-    <label>Nom du chantier *<input id="chantier" type="text" required></label>
-    <label>Nom de l'entreprise *<input id="entreprise" type="text" required></label>
-    <label>Nom du travailleur *<input id="travailleur" type="text" required></label>
-    <label>Téléphone *<input id="telephone" type="tel" required></label>
-    <label>Date d'arrivée *<input id="dateArrivee" type="date" required></label>
-    <label>Métier<input id="metier" type="text"></label>
-    <label>Syndicat<input id="syndicat" type="text"></label>
-    <label>Numéro de certificat<input id="certificat" type="text"></label>
+        <label>Nom de l'entreprise <span>*</span>
+          <input id="entreprise" type="text" required>
+        </label>
 
-    <h2>2. Sujets discutés</h2>
-    <div class="checkbox-grid">
-      <label><input type="checkbox" name="sujets" value="Politique Santé, Sécurité et Environnement"> Politique Santé, Sécurité et Environnement</label>
-      <label><input type="checkbox" name="sujets" value="Description du projet"> Description du projet</label>
-      <label><input type="checkbox" name="sujets" value="Responsabilités du travailleur"> Responsabilités du travailleur</label>
-      <label><input type="checkbox" name="sujets" value="Droit de refus"> Droit de refus</label>
-      <label><input type="checkbox" name="sujets" value="Politique alcool et drogues"> Politique alcool et drogues</label>
-      <label><input type="checkbox" name="sujets" value="Hygiène et discipline"> Hygiène et discipline</label>
-      <label><input type="checkbox" name="sujets" value="EPI"> Équipement de protection individuelle</label>
-      <label><input type="checkbox" name="sujets" value="Circulation de chantier / vitesse"> Circulation de chantier / vitesse</label>
-      <label><input type="checkbox" name="sujets" value="Point de rassemblement"> Point de rassemblement</label>
-      <label><input type="checkbox" name="sujets" value="Premiers soins / secouriste"> Premiers soins / secouriste</label>
-      <label><input type="checkbox" name="sujets" value="Rapport immédiat d'accident"> Rapport immédiat d'accident</label>
-      <label><input type="checkbox" name="sujets" value="Silice"> Silice</label>
-      <label><input type="checkbox" name="sujets" value="Travaux à chaud"> Travaux à chaud</label>
-      <label><input type="checkbox" name="sujets" value="Excavation"> Excavation</label>
-      <label><input type="checkbox" name="sujets" value="Échafaudage"> Échafaudage</label>
-      <label><input type="checkbox" name="sujets" value="Travaux en hauteur"> Travaux en hauteur</label>
-      <label><input type="checkbox" name="sujets" value="Cadenassage"> Cadenassage</label>
-      <label><input type="checkbox" name="sujets" value="Mesures d'urgence"> Mesures d'urgence</label>
-      <label><input type="checkbox" name="sujets" value="MST"> Méthodes sécuritaires de travail</label>
-      <label><input type="checkbox" name="sujets" value="AST"> Analyse sécuritaire de tâches</label>
-    </div>
-    <label>Autre sujet<textarea id="autreSujet" rows="2"></textarea></label>
+        <label>Nom du travailleur <span>*</span>
+          <input id="travailleur" type="text" required>
+        </label>
 
-    <h2>3. Formations et cartes</h2>
-    <div class="checkbox-grid">
-      <label><input type="checkbox" name="formations" value="Travail en hauteur"> Travail en hauteur</label>
-      <label><input type="checkbox" name="formations" value="Amiante"> Amiante</label>
-      <label><input type="checkbox" name="formations" value="Silice"> Silice</label>
-      <label><input type="checkbox" name="formations" value="Protection respiratoire"> Protection respiratoire</label>
-      <label><input type="checkbox" name="formations" value="SIMDUT 2015"> SIMDUT 2015</label>
-      <label><input type="checkbox" name="formations" value="Signaleur routier"> Signaleur routier</label>
-      <label><input type="checkbox" name="formations" value="Chariot élévateur"> Chariot élévateur</label>
-      <label><input type="checkbox" name="formations" value="Nacelle"> Nacelle</label>
-      <label><input type="checkbox" name="formations" value="Plateforme élévatrice"> Plateforme élévatrice</label>
-      <label><input type="checkbox" name="formations" value="Cadenassage"> Cadenassage</label>
-      <label><input type="checkbox" name="formations" value="Espace clos"> Espace clos</label>
-      <label><input type="checkbox" name="formations" value="Élingage"> Élingage</label>
-    </div>
+        <label>Téléphone <span>*</span>
+          <input id="telephone" type="tel" required>
+        </label>
 
-    <label>Photo carte de compétence<input id="photoCompetence" type="file" accept="image/*" capture="environment"></label>
-    <label>Photo carte ASP / formation<input id="photoAsp" type="file" accept="image/*" capture="environment"></label>
+        <label>Date d'arrivée <span>*</span>
+          <input id="dateArrivee" type="date" required>
+        </label>
 
-    <h2>4. Engagement SST</h2>
-    <p class="legal">Je m'engage à respecter la planification sécuritaire du maître d'œuvre ainsi que les parties du programme de prévention qui me sont applicables. Je comprends qu'un manquement pourrait entraîner des mesures disciplinaires ou des sanctions.</p>
-    <label class="accept"><input id="acceptation" type="checkbox" required> J'accepte cet engagement SST.</label>
+        <label>Métier
+          <input id="metier" type="text">
+        </label>
+      </section>
 
-    <h2>5. Signature</h2>
-    <div class="signature-wrap"><canvas id="signatureCanvas"></canvas></div>
-    <button type="button" class="secondary" id="clearSignature">Effacer la signature</button>
+      <section class="card">
+        <h2>2. Sujets discutés</h2>
 
-    <div class="actions"><button type="submit" class="primary">Générer le PDF</button></div>
-    <p id="status" class="status"></p>
-  </form>
-</main>
+        <div class="check-list">
+          <label><input type="checkbox" name="sujets" value="Politique santé, sécurité"> Politique santé, sécurité</label>
+          <label><input type="checkbox" name="sujets" value="Responsabilité travailleur"> Responsabilité travailleur</label>
+          <label><input type="checkbox" name="sujets" value="Politique drogue, alcool et harcèlement"> Politique drogue, alcool et harcèlement</label>
+          <label><input type="checkbox" name="sujets" value="Description du projet"> Description du projet</label>
+        </div>
 
-<footer>© GCP Construction - Accueil SST</footer>
-<script src="script.js"></script>
+        <label class="other-topic"><input id="autreSujetCheck" type="checkbox"> Autre sujet</label>
+        <textarea id="autreSujet" rows="4" placeholder="Préciser l'autre sujet au besoin"></textarea>
+      </section>
+
+      <section class="card">
+        <h2>3. Formations et cartes</h2>
+
+        <label>Photo carte de compétence
+          <input id="photoCompetence" type="file" accept="image/*" capture="environment">
+        </label>
+      </section>
+
+      <section class="card">
+        <h2>4. Engagement SST</h2>
+
+        <p class="engagement">
+          Je m'engage à respecter la planification sécuritaire du maître d'œuvre ainsi que les parties du programme de prévention qui me sont applicables. Je comprends qu'un manquement pourrait entraîner des mesures disciplinaires ou des sanctions.
+        </p>
+
+        <label class="accept"><input id="acceptation" type="checkbox" required> J'accepte cet engagement SST <span>*</span></label>
+
+        <h3>Signature du travailleur <span>*</span></h3>
+        <div class="signature-box">
+          <canvas id="signatureCanvas"></canvas>
+          <div class="signature-hint">Signez ici avec votre doigt ou votre souris</div>
+        </div>
+      </section>
+
+      <div class="button-row">
+        <button type="button" id="resetBtn" class="secondary">↻ Réinitialiser</button>
+        <button type="submit" class="primary">▧ Générer le PDF</button>
+      </div>
+
+      <p id="status" class="status"></p>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>
