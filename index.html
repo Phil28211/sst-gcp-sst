@@ -341,7 +341,9 @@
           data-theme="light"
           data-language="fr"
           data-retry="auto"
-          data-refresh-expired="auto">
+          data-refresh-expired="auto"
+          data-error-callback="onTurnstileError"
+          data-expired-callback="onTurnstileExpired">
         </div>
 
       </section>
@@ -385,6 +387,52 @@
     </form>
 
   </main>
+
+
+
+  <!-- ================================================== -->
+  <!-- GESTION TURNSTILE -->
+  <!-- ================================================== -->
+
+  <script>
+    function onTurnstileError(errorCode) {
+      console.error(
+        "Turnstile error:",
+        errorCode
+      );
+
+      const status =
+        document.getElementById("status");
+
+      if (status) {
+        status.textContent =
+          "Erreur Turnstile : " + errorCode;
+
+        status.className =
+          "status error";
+      }
+
+      return true;
+    }
+
+
+    function onTurnstileExpired() {
+      console.warn(
+        "Jeton Turnstile expiré."
+      );
+
+      const status =
+        document.getElementById("status");
+
+      if (status) {
+        status.textContent =
+          "La vérification de sécurité a expiré. Veuillez la refaire.";
+
+        status.className =
+          "status error";
+      }
+    }
+  </script>
 
 
 
