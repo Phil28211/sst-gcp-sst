@@ -94,15 +94,12 @@ function fileToDataURL(file) {
 
 
 async function compressImage(file, maxDimension = 1400, quality = 0.82) {
-
   const source = await fileToDataURL(file);
 
   return new Promise((resolve, reject) => {
-
     const img = new Image();
 
     img.onload = () => {
-
       let width = img.width;
       let height = img.height;
 
@@ -141,9 +138,7 @@ async function compressImage(file, maxDimension = 1400, quality = 0.82) {
 
 
 async function loadLogoAsDataUrl() {
-
   try {
-
     const response = await fetch("logo.png", {
       cache: "no-store"
     });
@@ -155,7 +150,6 @@ async function loadLogoAsDataUrl() {
     return await fileToDataURL(blob);
 
   } catch (error) {
-
     console.warn("Logo non disponible :", error);
 
     return null;
@@ -171,7 +165,6 @@ function addWrappedText(
   maxWidth,
   lineHeight = 4.5
 ) {
-
   const lines = doc.splitTextToSize(text || "-", maxWidth);
 
   doc.text(lines, x, y);
@@ -188,7 +181,6 @@ function addField(
   y,
   maxWidth
 ) {
-
   doc.setFont("helvetica", "bold");
   doc.text(label, x, y);
 
@@ -217,7 +209,6 @@ function addField(
 // ======================================================
 
 async function getFormData() {
-
   const selectedSubjects = Array.from(
     document.querySelectorAll(
       'input[name="sujets"]:checked'
@@ -237,7 +228,6 @@ async function getFormData() {
     photoInput.files &&
     photoInput.files[0]
   ) {
-
     photoCompetence =
       await compressImage(
         photoInput.files[0]
@@ -258,7 +248,6 @@ async function getFormData() {
 
 
   return {
-
     chantier:
       document.getElementById("chantier")?.value.trim() || "",
 
@@ -301,20 +290,13 @@ async function getFormData() {
 // ======================================================
 
 async function createPdf(data) {
-
   const { jsPDF } = window.jspdf;
 
-
   const doc = new jsPDF({
-
     unit: "mm",
-
     format: "letter",
-
     orientation: "portrait"
-
   });
-
 
   const pageWidth =
     doc.internal.pageSize.getWidth();
@@ -322,12 +304,10 @@ async function createPdf(data) {
   const pageHeight =
     doc.internal.pageSize.getHeight();
 
-
   const margin = 14;
 
   const contentWidth =
     pageWidth - margin * 2;
-
 
   let y = 9;
 
@@ -341,9 +321,7 @@ async function createPdf(data) {
 
 
   if (logoData) {
-
     try {
-
       doc.addImage(
         logoData,
         "PNG",
@@ -352,9 +330,7 @@ async function createPdf(data) {
         39,
         15
       );
-
     } catch (error) {
-
       console.warn(
         "Impossible d'ajouter le logo",
         error
@@ -599,7 +575,6 @@ async function createPdf(data) {
     data.autreSujetCheck &&
     data.autreSujet
   ) {
-
     subjects.push(
       `Autre sujet : ${data.autreSujet}`
     );
@@ -607,7 +582,6 @@ async function createPdf(data) {
 
 
   if (subjects.length) {
-
     const half =
       Math.ceil(
         subjects.length / 2
@@ -615,7 +589,6 @@ async function createPdf(data) {
 
 
     const columns = [
-
       subjects.slice(
         0,
         half
@@ -624,7 +597,6 @@ async function createPdf(data) {
       subjects.slice(
         half
       )
-
     ];
 
 
@@ -683,7 +655,6 @@ async function createPdf(data) {
       maxRows * 5 + 4;
 
   } else {
-
     doc.text(
       "-",
       margin,
@@ -761,9 +732,7 @@ async function createPdf(data) {
 
 
   if (data.photoCompetence) {
-
     try {
-
       const props =
         doc.getImageProperties(
           data.photoCompetence
@@ -787,7 +756,6 @@ async function createPdf(data) {
         drawH >
         photoH - 2
       ) {
-
         drawH =
           photoH - 2;
 
@@ -817,7 +785,6 @@ async function createPdf(data) {
 
 
     } catch (error) {
-
       console.warn(
         "Photo non intégrée",
         error
@@ -848,7 +815,6 @@ async function createPdf(data) {
     }
 
   } else {
-
     doc.setFont(
       "helvetica",
       "normal"
@@ -954,9 +920,7 @@ async function createPdf(data) {
 
 
   if (data.signatureDataUrl) {
-
     try {
-
       doc.addImage(
         data.signatureDataUrl,
         "PNG",
@@ -967,7 +931,6 @@ async function createPdf(data) {
       );
 
     } catch (error) {
-
       console.warn(
         "Signature non intégrée",
         error
@@ -1066,7 +1029,7 @@ async function createPdf(data) {
 
 
 // ======================================================
-// ENVOI VERS SHAREPOINT
+// ENVOI VERS SHAREPOINT + TURNSTILE
 // ======================================================
 
 async function uploadPdfToSharePoint(
@@ -1077,6 +1040,27 @@ async function uploadPdfToSharePoint(
   const payload =
     new FormData();
 
+
+  // ====================================================
+  // RÉCUPÉRER LE JETON TURNSTILE
+  // ====================================================
+
+  const turnstileToken =
+    document.querySelector(
+      'input[name="cf-turnstile-response"]'
+    )?.value;
+
+
+  if (!turnstileToken) {
+    throw new Error(
+      "Veuillez compléter la vérification de sécurité."
+    );
+  }
+
+
+  // ====================================================
+  // CONTENU À TRANSMETTRE
+  // ====================================================
 
   payload.append(
     "pdf",
@@ -1090,6 +1074,16 @@ async function uploadPdfToSharePoint(
     fileName
   );
 
+
+  payload.append(
+    "turnstileToken",
+    turnstileToken
+  );
+
+
+  // ====================================================
+  // ENVOI AU WORKER
+  // ====================================================
 
   const response =
     await fetch(
@@ -1105,18 +1099,15 @@ async function uploadPdfToSharePoint(
 
 
   try {
-
     result =
       await response.json();
 
   } catch {
-
     result = null;
   }
 
 
   if (!response.ok) {
-
     const details =
       result?.details ||
       result?.error ||
@@ -1134,7 +1125,6 @@ async function uploadPdfToSharePoint(
     result &&
     result.ok === false
   ) {
-
     throw new Error(
       result.error ||
       result.message ||
@@ -1159,20 +1149,42 @@ form?.addEventListener(
 
 
     try {
-
       setStatus(
         "Préparation de l'accueil SST...",
         "loading"
       );
 
 
+      // ====================================================
+      // VÉRIFIER LA SIGNATURE
+      // ====================================================
+
       if (
         signaturePad &&
         signaturePad.isEmpty()
       ) {
-
         setStatus(
           "Veuillez signer l'accueil SST avant de transmettre.",
+          "error"
+        );
+
+        return;
+      }
+
+
+      // ====================================================
+      // VÉRIFIER TURNSTILE AVANT LE PDF
+      // ====================================================
+
+      const turnstileToken =
+        document.querySelector(
+          'input[name="cf-turnstile-response"]'
+        )?.value;
+
+
+      if (!turnstileToken) {
+        setStatus(
+          "Veuillez compléter la vérification de sécurité.",
           "error"
         );
 
@@ -1239,7 +1251,6 @@ form?.addEventListener(
 
 
       if (DOWNLOAD_LOCAL_COPY) {
-
         doc.save(
           fileName
         );
@@ -1259,7 +1270,6 @@ form?.addEventListener(
 
 
       if (submitButton) {
-
         submitButton.dataset.originalText =
           submitButton.dataset.originalText ||
           submitButton.textContent;
@@ -1270,6 +1280,24 @@ form?.addEventListener(
       }
 
 
+      // ====================================================
+      // RÉINITIALISER TURNSTILE APRÈS SUCCÈS
+      // ====================================================
+
+      if (
+        typeof turnstile !== "undefined"
+      ) {
+        try {
+          turnstile.reset();
+        } catch (error) {
+          console.warn(
+            "Turnstile reset impossible :",
+            error
+          );
+        }
+      }
+
+
       console.log(
         "SharePoint :",
         result
@@ -1277,7 +1305,6 @@ form?.addEventListener(
 
 
     } catch (error) {
-
       console.error(
         error
       );
@@ -1287,6 +1314,21 @@ form?.addEventListener(
         `Erreur : ${error.message}`,
         "error"
       );
+
+
+      // Réinitialise Turnstile après une erreur
+      if (
+        typeof turnstile !== "undefined"
+      ) {
+        try {
+          turnstile.reset();
+        } catch (resetError) {
+          console.warn(
+            "Turnstile reset impossible :",
+            resetError
+          );
+        }
+      }
     }
   }
 );
@@ -1304,8 +1346,22 @@ resetBtn?.addEventListener(
 
 
     if (signaturePad) {
-
       signaturePad.clear();
+    }
+
+
+    // Réinitialiser Turnstile
+    if (
+      typeof turnstile !== "undefined"
+    ) {
+      try {
+        turnstile.reset();
+      } catch (error) {
+        console.warn(
+          "Turnstile reset impossible :",
+          error
+        );
+      }
     }
 
 
@@ -1325,7 +1381,6 @@ resetBtn?.addEventListener(
       submitButton &&
       submitButton.dataset.originalText
     ) {
-
       submitButton.textContent =
         submitButton.dataset.originalText;
     }
@@ -1340,8 +1395,6 @@ resetBtn?.addEventListener(
 window.addEventListener(
   "load",
   () => {
-
     initSignature();
-
   }
 );
