@@ -1,16 +1,32 @@
 <!doctype html>
 <html lang="fr-CA">
+
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Accueil SST - GCP Construction</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
 
-  <link rel="stylesheet" href="style.css">
+  <title>
+    Accueil SST - GCP Construction
+  </title>
 
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@5.0.5/dist/signature_pad.umd.min.js"></script>
+  <link
+    rel="stylesheet"
+    href="style.css"
+  >
 
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <!-- Signature -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/signature_pad@5.0.5/dist/signature_pad.umd.min.js">
+  </script>
+
+  <!-- Génération PDF -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js">
+  </script>
 
   <!-- Cloudflare Turnstile -->
   <script
@@ -20,9 +36,11 @@
   </script>
 </head>
 
+
 <body>
 
   <main class="page">
+
 
     <!-- ================================================== -->
     <!-- EN-TÊTE -->
@@ -46,6 +64,7 @@
       </p>
 
     </section>
+
 
 
     <!-- ================================================== -->
@@ -301,7 +320,7 @@
 
 
       <!-- ================================================== -->
-      <!-- VÉRIFICATION CLOUDFLARE -->
+      <!-- 5. VÉRIFICATION DE SÉCURITÉ -->
       <!-- ================================================== -->
 
       <section class="card">
@@ -310,11 +329,19 @@
           Vérification de sécurité
         </h2>
 
+        <p>
+          Veuillez compléter la vérification avant de transmettre
+          votre accueil SST.
+        </p>
+
+
         <div
           class="cf-turnstile"
-          data-sitekey="TON_SITE_KEY_ICI"
+          data-sitekey="0x4AAAAAAFLYnAK9cWMqRScf"
           data-theme="light"
-          data-language="fr">
+          data-language="fr"
+          data-retry="auto"
+          data-refresh-expired="auto">
         </div>
 
       </section>
@@ -344,8 +371,9 @@
       </div>
 
 
+
       <!-- ================================================== -->
-      <!-- STATUT -->
+      <!-- MESSAGE DE STATUT -->
       <!-- ================================================== -->
 
       <p
@@ -359,11 +387,13 @@
   </main>
 
 
+
   <!-- ================================================== -->
-  <!-- SCRIPT PRINCIPAL -->
+  <!-- SCRIPT GCP -->
   <!-- ================================================== -->
 
   <script src="script.js"></script>
 
 </body>
+
 </html>
